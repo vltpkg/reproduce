@@ -1,4 +1,4 @@
 (async function () {
   const reproduce = require('./index.js')
-  console.log(await reproduce('object-is'))
+  console.log(await reproduce('migrate'))
 })()

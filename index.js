@@ -1,5 +1,5 @@
 async function reproduce (spec) {
-  const opts = { registry: 'https://registry.npmjs.org', Arborist: require('@npmcli/arborist') }
+  const opts = { cache: './tmp', registry: 'https://registry.npmjs.org', Arborist: require('@npmcli/arborist') }
   const pacote = require('pacote')
   const diff = require('libnpmdiff')
   const manifest = await pacote.manifest(spec, opts)
