@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@npmcli/arborist": "^7.3.1",
+    "libnpmdiff": "^6.0.6",
+    "pacote": "^17.0.6"
+  }
+}
