@@ -69,15 +69,6 @@ npx reproduce require --json
 }
 ```
 
-```bash
-npx reproduce sleepover --recursive --json
-{
-  "require@0.9.1": {
-    "passed": "npm:10.9.1:root"
-  }
-}
-```
-
 ### Insights
 
 #### Of the top 10,000 most downloaded packages on `registry.npmjs.org`...

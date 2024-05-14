@@ -1,18 +1,31 @@
-const fs = require('fs')
-const { reproduce } = require('../index.js')
-const cache = require('../cache.json')
-const { packages } = require('./packages.json')
+import fs from 'node:fs'
+import os from 'node:os'
+import { reproduce } from '../index.js'
+import cache from '../cache.json' with { type: 'json' }
+import packages from './packages.json' with { type: 'json' }
+import PQueue from 'p-queue'
+const cpus = os.cpus().length - 1
+const queue = new PQueue({ concurrency: cpus })
+console.log('go this fast:', cpus)
+
 // const { packument } = require('pacote')
-const subset = packages.slice(0, 36)
+const subset = packages.packages.slice(0, 5)
 const results = {}
 const opts = { cache, packumentCache: new Map() }
-
 for (let i = 0; i < subset.length; i++) {
-  let pkg = subset[i]
-  console.log(`reproducing ${pkg}...`)
-  results[pkg] = await reproduce(pkg, opts)
+  queue.add(((pkg) => { 
+    return () => {
+      return new Promise(async (resolve) => {
+        console.log(`reproducing ${pkg}...`)
+        results[pkg] = await reproduce(pkg, opts)
+        resolve()
+      })
+    }
+  })(subset[i]))
 }
-console.log(results)
+
+await queue.onIdle()
+console.log('results:', results)
 fs.writeFileSync('./cache.json', JSON.stringify(results, null, 2))
 
 // for (const pkg of subset) {
