@@ -4,7 +4,7 @@ Can we reproduce a package with the _"origin"_ information provided...
 
 ### Features
 
-- determines whether or not a package can be reproduced from it's referenced repository metadata (ie. `repository`, `repository.type`, `repositoru.url`, `repository.directory` & `gitHead`)
+- determines whether or not a package can be reproduced from it's referenced repository metadata (ie. `repository`, `repository.type`, `repository.url`, `repository.directory` & `gitHead`)
 - validates `repository` information against `package.json` if the package referenced lives on a registry (will fallback to `package.json` inside the tarball if the package is not in a registry)
   - mismatching `repository` information is considered [_"manifest confusion"_](https://blog.vlt.sh/blog/the-massive-hole-in-the-npm-ecosystem) & will return `false` for _"reproducibility"_
 - runs the preparing/packing in an isolated container

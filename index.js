@@ -1,5 +1,27 @@
-import pacote from 'pacote'
-import Arborist from '@npmcli/arborist'
+//
+// TODO:
+//
+// 0. add the release workspaces script to run alongside the client's publish workflow
+//
+// 1. refactor (typescript + use vlt libraries)
+//   1.1. run on all our own packages (ie. workspaces)
+//   1.2. distribute our internal workspaces/packages
+//
+// 2. test with / for the top ~10k packages
+//   2.1. use in blog post for rough %s of packages that can be reproduced
+//   2.2. need to caveat the environment + time of testing factors into reporducibility
+//
+// 3. put into a service which returns results (lazily)
+//
+// POTENTIAL BLOCKERS:
+//
+// 1. our packages fail to reproduce
+//   1.1. likely because we have immauture git package resolution
+//   1.2. our workflow for publishing isn't accounted for (ie. we use pnpm workspaces)
+//
+
+import pacote from 'pacote' // @vltpkg/package-info
+import Arborist from '@npmcli/arborist' // this is a hack... don't need this
 export async function reproduce (spec, opts={}) {
   opts = {
     cache: {},
