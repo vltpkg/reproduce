@@ -1,6 +1,20 @@
-# reproduce
+![reproduce](https://github.com/user-attachments/assets/cf9f4d5d-b78e-4fda-94d3-34a9271f012e)
 
-Can we reproduce a package with the _"origin"_ information provided...
+# Reproduce
+
+Can we reproduce a package with the _"origin"_ information provided?
+
+**[Features](#features)**
+·
+**[How It Works](#how-it-works)**
+·
+**[Strategies](#strategies)**
+·
+**[Examples](#examples)**
+·
+**[Insights](#insights)**
+·
+**[Why?](#why-look-into-reproducibility)**
 
 ### Features
 
@@ -9,7 +23,7 @@ Can we reproduce a package with the _"origin"_ information provided...
   - mismatching `repository` information is considered [_"manifest confusion"_](https://blog.vlt.sh/blog/the-massive-hole-in-the-npm-ecosystem) & will return `false` for _"reproducibility"_
 - runs the preparing/packing in an isolated container
 
-### How it works
+### How It Works
 
 1. fetches the package & any corresponding metadata
 2. if available, does a clone/checkout of the corresponding source `repository`
