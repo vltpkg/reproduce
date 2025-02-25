@@ -42,16 +42,10 @@ The `reproduce` function accepts an options object with the following configurat
 
 ```js
 {
-  // Cache configuration
-  cache: {},                    // Optional in-memory cache object
+  cache: {},                      // Optional in-memory cache object
   cacheDir: '~/.cache/reproduce', // OS-specific cache directory (configurable)
-  cacheFile: 'cache.json',      // Cache file name
-  persistCache: true,           // Whether to persist cache to disk
-
-  // Package manager configuration
-  packageManager: 'npm',        // Supported: 'npm', 'yarn', 'pnpm'
-  packageManagerVersion: null,  // Specific version, or null for latest
-  packageManagerConfig: {}      // Package manager specific configuration
+  cacheFile: 'cache.json',        // Cache file name
+  strategy: 'npm'                 // Strategy to use
 }
 ```
 
