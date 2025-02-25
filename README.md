@@ -36,9 +36,9 @@ Can we reproduce a package with the _"origin"_ information provided?
 
 A strategy is a set of operations to take to recreate a package. Strategies should represent common patterns for preparing/building/packing packages to cast wide nets. If a set successfully recreates a package then its ID will be stored inside the returned metadata. These strastegies are sequentially checked until one works.
 
-| Order ID |  UUID | Equivalent Commands | Notes |
-| :-: | --- | --- | --- |
-| 1 | `npm:pacote:<version>` | `<version>` defaults to `latest` - `"pacote"` is `npm`'s internal utility for downloading, packing & unpacking packages |
+| Order ID |  UUID |  Notes |
+| :-: | --- | --- |
+| 1 | `npm:<version>` | clones, checks out ref, installs deps, runs prepare scripts & packs |
 
 > Note: one-off/bespoke or complex configurations will not be supported but we will continue to add more strategies as we find common patterns.
 

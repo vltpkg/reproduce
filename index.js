@@ -1,26 +1,12 @@
-import {
-  manifest as getManifest,
-  tarball as getTarball
-} from '@vltpkg/package-info'
-import { readFileSync } from 'node:fs'
-import { promisify } from 'node:util'
+import { execSync } from 'node:child_process'
 import { Spec } from '@vltpkg/spec'
-import pacote from 'pacote'
-import Arborist from '@npmcli/arborist'
+import { manifest as getManifest } from '@vltpkg/package-info'
 import pkg from './package.json' with { type: 'json' }
-import enhanced from 'enhanced-resolve'
-const enhancedResolve = promisify(enhanced)
 
 export async function reproduce (spec, opts={}) {
 
   opts = {
     cache: {},
-    pacote: {
-      cache: './cache/',
-      registry: 'https://registry.npmjs.org',
-      Arborist,
-      pacumentCache: opts?.packumentCache ? opts.packumentCache : new Map()
-    },
     ...opts
   }
 
@@ -57,19 +43,27 @@ export async function reproduce (spec, opts={}) {
     }
 
     const source = `github:${location}#${ref}${path}`
-
-    // npm/pacote-specific build
-    const pacotePackgeJSON = await enhancedResolve('./', 'pacote/package.json')
-    const pacoteVersion = JSON.parse(readFileSync(pacotePackgeJSON, 'utf8')).version
-    const build = await pacote.tarball(source, opts.pacote)
-
+    const sourceSpec = new Spec(`${manifest.name}@${source}`)
+    execSync(`
+      rm -rf ../cache/${sourceSpec.name} &&
+      git clone https://github.com/${location}.git ../cache/${sourceSpec.name} &&
+      cd ../cache/${sourceSpec.name} &&
+      git checkout ${ref} && 
+      npm install
+    `, { stdio: 'pipe' })
+    const result = execSync(`
+      cd ../cache/${sourceSpec.name} &&
+      npm pack --dry-run --json
+    `, { stdio: 'pipe' })
+    const packed = JSON.parse(result.toString())[0]
+    const npmVersion = execSync(`npm --version`).toString().trim()
     const check = opts.cache[spec] = {
       reproduceVersion: pkg.version,
       timestamp: new Date(),
       os: process.platform,
       arch: process.arch,
-      strategy: `npm:pacote:${pacoteVersion}`,
-      reproduced: manifest.dist.integrity === build.integrity,
+      strategy: `npm:${npmVersion}`,
+      reproduced: manifest.dist.integrity === packed.integrity,
       package: {
         spec,
         location: manifest.dist.tarball,
@@ -78,12 +72,13 @@ export async function reproduce (spec, opts={}) {
       source: {
         spec: source,
         location: repo.url,
-        integrity: build.integrity,
+        integrity: packed.integrity,
       }
     }
     return check
 
   } catch (e) {
+    console.error(e)
     return false
   }
 

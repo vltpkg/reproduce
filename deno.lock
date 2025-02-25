@@ -6,9 +6,11 @@
     "npm:@vltpkg/spec@^0.0.0-0.1730724342581": "0.0.0-0.1730724342581",
     "npm:deno@^1.46.0": "1.46.3",
     "npm:enhanced-resolve@^5.18.1": "5.18.1",
+    "npm:libnpmpack@9": "9.0.0",
     "npm:minargs@^2.0.3": "2.0.3",
     "npm:p-queue@^8.0.1": "8.1.0",
-    "npm:pacote@21": "21.0.0"
+    "npm:pacote@21": "21.0.0",
+    "npm:ssri@12": "12.0.0"
   },
   "npm": {
     "@deno/darwin-arm64@1.46.3": {
@@ -679,6 +681,15 @@
     "just-diff@6.0.2": {
       "integrity": "sha512-S59eriX5u3/QhMNq3v/gm8Kd0w8OS6Tz2FS1NG4blv+z0MuQcBRJyFWjdovM0Rad4/P4aUPFtnkNjMjyMlMSYA=="
     },
+    "libnpmpack@9.0.0": {
+      "integrity": "sha512-6UBeHebxorKuFZq6qQDV1PIjfZo6OvyzXMfI2UsRtrhlFDsOQsg9H2mZQwPryQXTOO/ifHxnjpmZmJdVn5INTg==",
+      "dependencies": [
+        "@npmcli/arborist",
+        "@npmcli/run-script",
+        "npm-package-arg",
+        "pacote"
+      ]
+    },
     "lru-cache@10.4.3": {
       "integrity": "sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ=="
     },
@@ -1202,9 +1213,11 @@
         "npm:@vltpkg/spec@^0.0.0-0.1730724342581",
         "npm:deno@^1.46.0",
         "npm:enhanced-resolve@^5.18.1",
+        "npm:libnpmpack@9",
         "npm:minargs@^2.0.3",
         "npm:p-queue@^8.0.1",
-        "npm:pacote@21"
+        "npm:pacote@21",
+        "npm:ssri@12"
       ]
     }
   }
