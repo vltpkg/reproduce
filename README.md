@@ -1,28 +1,5 @@
 <img alt="reproduce logo" src="https://private-user-images.githubusercontent.com/65996263/414899900-cf9f4d5d-b78e-4fda-94d3-34a9271f012e.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDAzMjg0NzQsIm5iZiI6MTc0MDMyODE3NCwicGF0aCI6Ii82NTk5NjI2My80MTQ4OTk5MDAtY2Y5ZjRkNWQtYjc4ZS00ZmRhLTk0ZDMtMzRhOTI3MWYwMTJlLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAyMjMlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMjIzVDE2MjkzNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTRlN2Y0NmI0N2YwZjZiZTNlZjk1NjJhMTFiYTkxZTUwZWNiMzE4Y2QyNDAxNTFkYTMyMzk3Mzg4MmRhOTRhOGMmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.XhIC-BG3wFKiG1NJwSvdpbEARtS2LihWF_7Oy1DRm84" />
 
-## TODO:
-- [ ] make sure `vlt` repository information is accurate
-//
-// TODO:
-//
-// 0. add the release workspaces script to run alongside the client's publish workflow
-//
-// 1. refactor (typescript + use vlt libraries)
-//  1.1. run on all our own packages (ie. workspaces)
-//   1.2. distribute our internal workspaces/packages
-//
-// 2. test with / for the top ~10k packages
-//   2.1. use in blog post for rough %s of packages that can be reproduced
-//   2.2. need to caveat the environment + time of testing factors into reporducibility
-//
-// 3. put into a service which returns results (lazily)
-//
-// POTENTIAL BLOCKERS:
-//
-// 1. our packages fail to reproduce
-//   1.1. likely because we have immauture git package resolution
-//   1.2. our workflow for publishing isn't accounted for (ie. we use pnpm workspaces)
-//
 
 # `reproduce`
 
