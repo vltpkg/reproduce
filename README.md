@@ -16,7 +16,7 @@ Can we reproduce a package with the _"origin"_ information provided?
 ·
 **[Insights](#insights)**
 ·
-**[Why?](#why-look-into-reproducibility)**
+**[FAQs](#faqs)**
 
 ### Features
 
