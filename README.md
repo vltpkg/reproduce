@@ -66,11 +66,9 @@ The cache is stored in OS-specific locations:
 
 A strategy is a set of operations to take to recreate a package. Strategies should represent common patterns for preparing/building/packing packages to cast wide nets. If a set successfully recreates a package then its ID will be stored inside the returned metadata.
 
-| Order ID |  UUID |  Notes |
-| :-: | --- | --- |
-| 1 | `npm:<version>` | clones, checks out ref, installs deps, runs prepare scripts & packs |
-| 2 | `yarn:<version>` | same as npm strategy but using yarn |
-| 3 | `pnpm:<version>` | same as npm strategy but using pnpm |
+| UUID |  Notes |
+| --- | --- |
+| `npm:<version>` | clones, checks out ref, installs deps, runs prepare scripts & packs |
 
 > Note: one-off/bespoke or complex configurations will not be supported but we will continue to add more strategies as we find common patterns.
 
@@ -84,17 +82,12 @@ const result = await reproduce('package-name')
 
 // With custom configuration
 const result = await reproduce('package-name', {
-  packageManager: 'yarn',
-  packageManagerVersion: '3.2.0',
-  packageManagerConfig: {
-    'registry': 'https://custom-registry.com'
-  },
   cacheDir: './custom-cache',
-  persistCache: true
 })
 ```
 
-#### Result for [`sleepover`](https://npmjs.com/package/sleepover)
+#### Example Object Returned
+
 ```json
 {
   "reproduceVersion": "0.0.1-pre.1",
@@ -119,11 +112,11 @@ const result = await reproduce('package-name', {
 #### CLI
 
 ```bash
-npx reproduce tsc # exit code 0
+npx reproduce tsc # exit code 0 - reproducible
 ```
 
 ```bash
-npx reproduce esbuild # exit code 1
+npx reproduce esbuild # exit code 1 - not reproducible
 ```
 
 ```bash
@@ -170,13 +163,11 @@ npx reproduce require --json
 }
 ```
 
-![Is your package reproducible?](https://github.com/user-attachments/assets/65cb6e3f-8673-49ba-9e5c-94e80925690f)
-
 ### Insights
 
 #### Of the top 10,000 most downloaded packages on `registry.npmjs.org`...
 
-> Last ran: June 26th, 2024
+> Last ran: February 25th, 2025
 
 - **xx%** (xxxx) **are** reproducible
 - **xx%** (xxxx) do not define a `gitHead`, git tag, git sha or any other explicit reference to the repository's state
@@ -184,19 +175,22 @@ npx reproduce require --json
 - **xx%** (xxxx) have **manifest confusion** & their `repository` manifest information is mismatched with `package.json`
 - 
 
+### FAQs
 
-### Why look into _"reproducibility"_?
+#### Why look into "reproducibility"?
 
-Generally, "reproducible builds" has been a hot topic in the supply chain security world for awhile but little has been done to actually achieve this by the major incumbents.
+Generally, "reproducible builds" has been a hot topic in the supply chain security world but little has been done to actually achieve this by the major incumbents.
 
-1. **Capability** - it's important that we continue to strive at bubbling up net-new insights about the package ecosystems & this was low-hanging fruit which felt like the perfect proving ground for our new platform `vlt`
-2. **Security** - understanding whether or not you are able to reproduce a package from it's source referenced is arguably more important then either whom authored the code or its origins. Without even controlling the origin of either the package or the source we are able to - at any point in time - validate that one can create the other.
-3. **Performance** - this was a test of an ecosystem-wide analysis & put `vlt`'s code & infrastructure to the test
+#### Why open source `reproduce`?
 
-### Why open source `reproduce`?
-
-We think it's important that the ecoasystem can help contribute to & improve the semantics of reproducible packages in the JavaScript ecosystem. As we add more strategies, we should see the percentatge of reproducible packages grow over time.
+We think it's important that the ecoasystem can help contribute to & improve the semantics of reproducible packages in the JavaScript ecosystem. As we add more strategies, we should see the percentatge of reproducible packages grow over time. Feel free to contribute!
 
 ### Credits
 
-Big thanks to [@siddharthkp](https://github.com/siddharthkp) for gifting the package name `reproduce` to us as well as our friends at [Socket.dev](https://socket.dev/) for their initial review & feedback on the the code.
+Big thanks to [@siddharthkp](https://github.com/siddharthkp) for gifting the package name `reproduce` to us!
+
+### Learn More
+
+We wrote a blog post about this project & the results we found which you can read here: https://blog.vlt.sh/blog/reproducibility
+
+<a href="https://blog-git-darcyclarke-reproduce-vlt.vercel.app/blog/reproducibility"><img src="https://github.com/user-attachments/assets/65cb6e3f-8673-49ba-9e5c-94e80925690f" alt="Is your package reproducible?" /></a>
