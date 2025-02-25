@@ -41,26 +41,34 @@ export async function reproduce (spec, opts={}) {
 
     const source = `github:${location}#${ref}${path}`
     const sourceSpec = new Spec(`${manifest.name}@${source}`)
-    execSync(`
-      rm -rf ../cache/${sourceSpec.name} &&
-      git clone https://github.com/${location}.git ../cache/${sourceSpec.name} &&
-      cd ../cache/${sourceSpec.name} &&
-      git checkout ${ref} && 
-      npm install
-    `, { stdio: 'pipe' })
-    const result = execSync(`
-      cd ../cache/${sourceSpec.name} &&
-      npm pack --dry-run --json
-    `, { stdio: 'pipe' })
-    const packed = JSON.parse(result.toString())[0]
+    const options = { stdio: [] }
+    let packed = {}
+    
+    // test npm-specific strategy
+    try {
+      execSync(`
+        rm -rf ../cache/${sourceSpec.name} &&
+        git clone https://github.com/${location}.git ../cache/${sourceSpec.name} &&
+        cd ../cache/${sourceSpec.name} &&
+        git checkout ${ref} && 
+        npm install
+      `, options)
+      const packResult = execSync(`
+        cd ../cache/${sourceSpec.name} &&
+        npm pack --dry-run --json
+      `, options)
+      packed = JSON.parse(packResult.toString())[0]
+    } catch (e) {
+    }
     const npmVersion = execSync(`npm --version`).toString().trim()
+    
     const check = opts.cache[spec] = {
       reproduceVersion: pkg.version,
       timestamp: new Date(),
       os: process.platform,
       arch: process.arch,
       strategy: `npm:${npmVersion}`,
-      reproduced: manifest.dist.integrity === packed.integrity,
+      reproduced: manifest.dist.integrity === (packed?.integrity || ''),
       package: {
         spec,
         location: manifest.dist.tarball,
@@ -69,7 +77,7 @@ export async function reproduce (spec, opts={}) {
       source: {
         spec: source,
         location: repo.url,
-        integrity: packed.integrity,
+        integrity: packed?.integrity || '',
       }
     }
     return check

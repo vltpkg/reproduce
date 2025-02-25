@@ -87,8 +87,21 @@ npx reproduce lodash --json
 ```bash
 npx reproduce require --json
 {
-  "require@0.9.1": {
-    "passed": "npm:10.9.1:root"
+  "reproduceVersion": "0.0.1-pre.1",
+  "timestamp": "2025-02-25T10:22:09.303Z",
+  "os": "darwin",
+  "arch": "arm64",
+  "strategy": "npm:10.9.1",
+  "reproduced": true,
+  "package": {
+    "spec": "sleepover",
+    "location": "https://registry.npmjs.org/sleepover/-/sleepover-1.2.3.tgz",
+    "integrity": "sha512-yNAIVUqbQifyy5+hfzAzK2Zt21wXjwXqPyWLu+tOvhOcYKG2ffUiSoBXwt/yo4KJ51IcJfUS0Uq0ktOoMWy9Yw=="
+  },
+  "source": {
+    "spec": "github:darcyclarke/sleepover#f2586e91b3faf085583c23ed6e00819916e85c28",
+    "location": "git+ssh://git@github.com/darcyclarke/sleepover.git",
+    "integrity": "sha512-yNAIVUqbQifyy5+hfzAzK2Zt21wXjwXqPyWLu+tOvhOcYKG2ffUiSoBXwt/yo4KJ51IcJfUS0Uq0ktOoMWy9Yw=="
   }
 }
 ```
