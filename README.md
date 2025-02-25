@@ -59,27 +59,23 @@ npx reproduce esbuild # exit code 1
 ```
 
 ```bash
-npx reproduce esbuild -r # exit code 0 since a transitive dependency failed to reproduce
-```
-
-```bash
-npx reproduce lodash --json
+npx reproduce axios --json
 {
-  reproduceVersion: "0.0.1-pre.1",
-  timestamp: 2025-02-25T08:20:33.754Z,
-  os: "darwin",
-  arch: "arm64",
-  strategy: "npm:pacote:21.0.0",
-  reproduced: false,
-  package: {
-    spec: "lodash",
-    location: "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz",
-    integrity: "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
+  "reproduceVersion": "0.0.1-pre.1",
+  "timestamp": "2025-02-25T10:40:24.947Z",
+  "os": "darwin",
+  "arch": "arm64",
+  "strategy": "npm:10.9.1",
+  "reproduced": false,
+  "package": {
+    "spec": "axios",
+    "location": "https://registry.npmjs.org/axios/-/axios-1.7.9.tgz",
+    "integrity": "sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw=="
   },
-  source: {
-    spec: "github:lodash/lodash#c6e281b878b315c7a10d90f9c2af4cdb112d9625",
-    location: "git+https://github.com/lodash/lodash.git",
-    integrity: "sha512-Y6SfdAURtIZz68COx/AWD2mfSbKCcz6FeFw4SH1xFsmJL1V3MqXEhKEnqU8xO59WfFxa2/V9F6wS7voBVF8ACg=="
+  "source": {
+    "spec": "github:axios/axios#b2cb45d5a533a5465c99559b16987e4d5fc08cbc",
+    "location": "git+https://github.com/axios/axios.git",
+    "integrity": "null"
   }
 }
 ```
