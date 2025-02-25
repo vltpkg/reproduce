@@ -21,7 +21,6 @@ function getDefaultCacheDir() {
 const DEFAULT_CACHE_DIR = getDefaultCacheDir()
 const DEFAULT_CACHE_FILE = 'cache.json'
 const EXEC_OPTIONS = { stdio: [] }
-
 const STRATEGIES = {
   npm: {
     getVersion: () => execSync('npm --version', EXEC_OPTIONS).toString().trim(),
