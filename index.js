@@ -33,6 +33,7 @@ const STRATEGIES = {
 }
 
 export async function reproduce (spec, opts={}) {
+  
   opts = {
     cache: {},
     cacheDir: DEFAULT_CACHE_DIR,
@@ -41,21 +42,11 @@ export async function reproduce (spec, opts={}) {
     ...opts
   }
 
-  // Validate package manager
-  if (!STRATEGIES[opts.strategy]) {
-    throw new Error(`Unsupported package manager: ${opts.strategy}`)
+  if (!existsSync(opts.cacheDir)) {
+    mkdirSync(opts.cacheDir, { recursive: true })
   }
-
-  // Ensure cache directory exists
-  mkdirSync(opts.cacheDir, { recursive: true })
   const cacheFilePath = join(opts.cacheDir, opts.cacheFile)
-  if (existsSync(cacheFilePath)) {
-    try {
-      opts.cache = JSON.parse(readFileSync(cacheFilePath, 'utf8'))
-    } catch (e) {
-      console.warn('Failed to load cache file:', e)
-    }
-  }
+  opts.cache = Object.keys(opts.cache).length > 0 ? opts.cache : JSON.parse(readFileSync(cacheFilePath, 'utf8'))
 
   try {
     const info = new Spec(spec)
@@ -139,6 +130,7 @@ export async function reproduce (spec, opts={}) {
       }
     }
 
+    // Persist cache
     const cacheFilePath = join(opts.cacheDir, opts.cacheFile)
     writeFileSync(cacheFilePath, JSON.stringify(opts.cache, null, 2))
  

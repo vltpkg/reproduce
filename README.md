@@ -46,7 +46,9 @@ const result = await reproduce('package-name')
 
 // With custom configuration
 const result = await reproduce('package-name', {
+  cache: {},
   cacheDir: './custom-cache',
+  cacheFile: 'custom-cache.json'
 })
 ```
 
@@ -111,8 +113,8 @@ The `reproduce` function accepts an options object with the following configurat
 
 ```js
 {
-  cache: {},                      // Optional in-memory cache object
-  cacheDir: '~/.cache/reproduce', // OS-specific cache directory (configurable)
+  cache: {},                      // Optional in-memory cache object (persisted to disk if provided)
+  cacheDir: '~/.cache/reproduce', // OS-specific cache directory
   cacheFile: 'cache.json',        // Cache file name
   strategy: 'npm'                 // Strategy to use
 }
