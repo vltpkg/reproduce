@@ -2,13 +2,13 @@
   "name": "reproduce",
   "version": "0.0.1-pre.1",
   "license": "MIT",
-  "author": "Darcy Clarke <darcy@vlt.sh>",
+  "author": "vlt technology inc. <ops@vlt.sh>",
   "bin": {
     ".": "./cli.js"
   },
   "type": "module",
   "scripts": {
-    "test": "bun ./test/test.js"
+    "test": "deno --allow-all ./test/test.js"
   },
   "publishConfig": {
     "engines": {}
@@ -22,7 +22,7 @@
     "pacote": "^21.0.0"
   },
   "devDependencies": {
-    "bun": ">=1.x",
+    "deno": "^1.46.0",
     "p-queue": "^8.0.1"
   }
 }

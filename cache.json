@@ -1,7 +1,0 @@
-{
-  "supports-color": true,
-  "semver": false,
-  "tslib": false,
-  "ansi-styles": true,
-  "chalk": true
-}
