@@ -69,7 +69,7 @@ export async function reproduce (spec, opts={}) {
       os: process.platform,
       arch: process.arch,
       strategy: `npm:pacote:${pacoteVersion}`,
-      reproduceable: manifest.dist.integrity === build.integrity,
+      reproduced: manifest.dist.integrity === build.integrity,
       package: {
         spec,
         location: manifest.dist.tarball,
@@ -81,11 +81,10 @@ export async function reproduce (spec, opts={}) {
         integrity: build.integrity,
       }
     }
-    console.log(check)
-    return check.reproduceable
+    return check
 
   } catch (e) {
-    throw e
+    return false
   }
 
 }

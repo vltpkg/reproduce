@@ -2,6 +2,10 @@
 
 import { reproduce } from './index.js'
 import { minargs } from 'minargs'
-const { positionals } = minargs()
+const { positionals, args } = minargs()
 
-process.exit(await reproduce(positionals[0]) ? 0 : 1)
+const result = await reproduce(positionals[0])
+if (result && args.json) {
+  console.log(JSON.stringify(result, null, 2))
+}
+process.exit(result ? result.reproduced ? 0 : 1 : 2)

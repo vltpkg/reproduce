@@ -28,7 +28,7 @@ Can we reproduce a package with the _"origin"_ information provided?
 
 1. fetches the package & any corresponding metadata
 2. if available, does a clone/checkout of the corresponding source `repository`
-3. attempts to prepare & pack the source repository in a container using one or more [strategies](#stategies)
+3. attempts to prepare & pack the source repository using one or more [strategies](#stategies)
 4. validates the integrity value of `#3` against the package fetched in `#1`
 5. returns results
 
@@ -66,9 +66,21 @@ npx reproduce esbuild -r # exit code 0 since a transitive dependency failed to r
 ```bash
 npx reproduce lodash --json
 {
-  "lodash@1.2.3": {
-    "passed": false,
-    "error": [ ... ]
+  reproduceVersion: "0.0.1-pre.1",
+  timestamp: 2025-02-25T08:20:33.754Z,
+  os: "darwin",
+  arch: "arm64",
+  strategy: "npm:pacote:21.0.0",
+  reproduced: false,
+  package: {
+    spec: "lodash",
+    location: "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz",
+    integrity: "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
+  },
+  source: {
+    spec: "github:lodash/lodash#c6e281b878b315c7a10d90f9c2af4cdb112d9625",
+    location: "git+https://github.com/lodash/lodash.git",
+    integrity: "sha512-Y6SfdAURtIZz68COx/AWD2mfSbKCcz6FeFw4SH1xFsmJL1V3MqXEhKEnqU8xO59WfFxa2/V9F6wS7voBVF8ACg=="
   }
 }
 ```
