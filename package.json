@@ -16,9 +16,6 @@
     "@vltpkg/spec": "^0.0.0-0.1730724342581",
     "minargs": "^2.0.3"
   },
-  "devDependencies": {
-    "p-queue": "^8.0.1"
-  },
   "peerDependencies": {
     "npm": "^11.1.0"
   }

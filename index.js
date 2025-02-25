@@ -24,7 +24,7 @@ const EXEC_OPTIONS = { stdio: [] }
 const STRATEGIES = {
   npm: {
     getVersion: () => execSync('npm --version', EXEC_OPTIONS).toString().trim(),
-    install: (dir) => `cd ${dir} && npm install`,
+    install: (dir) => `cd ${dir} && npm install --no-audit --no-fund --silent >/dev/null`,
     pack: (dir) => ({
       command: `cd ${dir} && npm pack --dry-run --json`,
       parseResult: (output) => JSON.parse(output)[0]
@@ -89,9 +89,9 @@ export async function reproduce (spec, opts={}) {
       // Clone and install
       execSync(`
         rm -rf ${cacheDir} &&
-        git clone https://github.com/${location}.git ${cacheDir} &&
+        git clone https://github.com/${location}.git ${cacheDir} --depth 1 >/dev/null &&
         cd ${cacheDir} &&
-        git checkout ${ref}
+        git checkout ${ref} >/dev/null
       `, EXEC_OPTIONS)
 
       // Apply any package manager specific config
@@ -107,8 +107,9 @@ export async function reproduce (spec, opts={}) {
       const packCommand = strategy.pack(cacheDir)
       const packResult = execSync(packCommand.command, EXEC_OPTIONS)
       packed = packCommand.parseResult(packResult.toString())
+   
     } catch (e) {
-      console.error('Failed to reproduce package:', e)
+      // swallow reproducibility errors
     }
 
     const check = opts.cache[spec] = {

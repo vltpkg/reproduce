@@ -139,15 +139,14 @@ A strategy is a set of operations to take to recreate a package. Strategies shou
 
 ### Insights
 
-#### Of the top 10,000 most downloaded packages on `registry.npmjs.org`...
+#### 7,000+ High Impact Packages
 
-> Last ran: February 25th, 2025
+> Note: "High Impact" packages are defined as having >=1M downloads per week and/or >=500 dependants. This list was originally generated [here](http://github.com/nodejs/package-maintenance/issues/569#issuecomment-1739532894).
 
 - **xx%** (xxxx) **are** reproducible
 - **xx%** (xxxx) do not define a `gitHead`, git tag, git sha or any other explicit reference to the repository's state
   - ie. they are pointing to the latest repository version, likely breaking reproducibility when changes are pushed
 - **xx%** (xxxx) have **manifest confusion** & their `repository` manifest information is mismatched with `package.json`
-- 
 
 ### FAQs
 
