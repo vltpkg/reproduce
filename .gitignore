@@ -131,3 +131,5 @@ dist
 tmp/
 cache/
 research/
+
+.DS_Store
