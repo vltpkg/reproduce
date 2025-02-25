@@ -10,17 +10,16 @@
   "scripts": {
     "test": "bun ./test/test.js"
   },
-  "engines": {
-    "bun": ">=1.x",
-    "node": ">=22.x"
-  },
   "publishConfig": {
     "engines": {}
   },
   "dependencies": {
-    "@npmcli/arborist": "^7.3.1",
+    "@npmcli/arborist": "^9.0.0",
+    "@vltpkg/package-info": "^0.0.0-0.1730724342581",
+    "@vltpkg/spec": "^0.0.0-0.1730724342581",
+    "enhanced-resolve": "^5.18.1",
     "minargs": "^2.0.3",
-    "pacote": "^17.0.6"
+    "pacote": "^21.0.0"
   },
   "devDependencies": {
     "bun": ">=1.x",

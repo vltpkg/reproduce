@@ -1,28 +1,18 @@
-//
-// TODO:
-//
-// 0. add the release workspaces script to run alongside the client's publish workflow
-//
-// 1. refactor (typescript + use vlt libraries)
-//   1.1. run on all our own packages (ie. workspaces)
-//   1.2. distribute our internal workspaces/packages
-//
-// 2. test with / for the top ~10k packages
-//   2.1. use in blog post for rough %s of packages that can be reproduced
-//   2.2. need to caveat the environment + time of testing factors into reporducibility
-//
-// 3. put into a service which returns results (lazily)
-//
-// POTENTIAL BLOCKERS:
-//
-// 1. our packages fail to reproduce
-//   1.1. likely because we have immauture git package resolution
-//   1.2. our workflow for publishing isn't accounted for (ie. we use pnpm workspaces)
-//
+import {
+  manifest as getManifest,
+  tarball as getTarball
+} from '@vltpkg/package-info'
+import { readFileSync } from 'node:fs'
+import { promisify } from 'node:util'
+import { Spec } from '@vltpkg/spec'
+import pacote from 'pacote'
+import Arborist from '@npmcli/arborist'
+import pkg from './package.json' with { type: 'json' }
+import enhanced from 'enhanced-resolve'
+const enhancedResolve = promisify(enhanced)
 
-import pacote from 'pacote' // @vltpkg/package-info
-import Arborist from '@npmcli/arborist' // this is a hack... don't need this
 export async function reproduce (spec, opts={}) {
+
   opts = {
     cache: {},
     pacote: {
@@ -33,28 +23,69 @@ export async function reproduce (spec, opts={}) {
     },
     ...opts
   }
-  // return early when cache is warm
-  if (opts.cache.hasOwnProperty(spec)) {
-    return opts.cache[spec]
-  }
-  const manifest = await pacote.manifest(spec, opts.pacote)
-  if (!manifest) {
-    return false
-  }
-  const source = `${opts.pacote.registry}/${manifest.name}/${manifest.version}`
-  const data = await fetch(source)
-  const packument = await data.json()
-  if (!packument.repository || !packument.repository.url) {
-    return false
-  }
-  const repo = packument.repository.url
-  const head = packument.gitHead ? packument.gitHead : 'HEAD'
-  const ref = repo.indexOf('#') > 0 ? repo.substring(0, uri.indexOf('#')) : repo
-  const url = `${ref}#${head}`
+
   try {
-    const repkg = await pacote.tarball(url, opts.pacote)
-    return (packument.dist.integrity === repkg.integrity)
+    // validate spec
+    const info = new Spec(spec)
+    if (!spec || !info || info.type != 'registry' || info.registry != 'https://registry.npmjs.org/') {
+      return false
+    }
+
+    // cache
+    if (opts.cache.hasOwnProperty(spec)) {
+      return opts.cache[spec]
+    }
+
+    // get manifest
+    const manifest = await getManifest(spec)
+    if (!manifest || !manifest?.repository?.url) {
+      return false
+    }
+
+    const repo = manifest.repository
+    const url = repo.url
+    const parsed = new URL(url)
+    const location = parsed.pathname.replace('.git', '').split('/').slice(1, 3).join('/')
+    const path = repo.directory ? `::path:${repo.directory}` : ''
+    const explicitRef = url.indexOf('#') > 0 ? url.substring(0, url.indexOf('#')) : ''
+    const implicitRef = manifest.gitHead || 'HEAD'
+    const ref = explicitRef || implicitRef || ''
+    const host = parsed.host
+
+    if (host !== 'github.com') {
+      return false
+    }
+
+    const source = `github:${location}#${ref}${path}`
+
+    // npm/pacote-specific build
+    const pacotePackgeJSON = await enhancedResolve('./', 'pacote/package.json')
+    const pacoteVersion = JSON.parse(readFileSync(pacotePackgeJSON, 'utf8')).version
+    const build = await pacote.tarball(source, opts.pacote)
+
+    const check = opts.cache[spec] = {
+      reproduceVersion: pkg.version,
+      timestamp: new Date(),
+      os: process.platform,
+      arch: process.arch,
+      strategy: `npm:pacote:${pacoteVersion}`,
+      reproduceable: manifest.dist.integrity === build.integrity,
+      package: {
+        spec,
+        location: manifest.dist.tarball,
+        integrity: manifest.dist.integrity,
+      },
+      source: {
+        spec: source,
+        location: repo.url,
+        integrity: build.integrity,
+      }
+    }
+    console.log(check)
+    return check.reproduceable
+
   } catch (e) {
-    return false
+    throw e
   }
+
 }
