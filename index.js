@@ -11,18 +11,15 @@ export async function reproduce (spec, opts={}) {
   }
 
   try {
-    // validate spec
     const info = new Spec(spec)
     if (!spec || !info || info.type != 'registry' || info.registry != 'https://registry.npmjs.org/') {
       return false
     }
 
-    // cache
     if (opts.cache.hasOwnProperty(spec)) {
       return opts.cache[spec]
     }
 
-    // get manifest
     const manifest = await getManifest(spec)
     if (!manifest || !manifest?.repository?.url) {
       return false
