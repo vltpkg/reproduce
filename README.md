@@ -12,7 +12,7 @@ Can we reproduce a package with the _"origin"_ information provided?
 ·
 **[Strategies](#strategies)**
 ·
-**[Examples](#examples)**
+**[Usage](#usage)**
 ·
 **[Insights](#insights)**
 ·
@@ -20,21 +20,19 @@ Can we reproduce a package with the _"origin"_ information provided?
 
 ### Features
 
-- determines whether or not a package can be reproduced from it's referenced repository metadata (ie. `repository`, `repository.type`, `repository.url`, `repository.directory` & `gitHead`)
-- validates `repository` information against `package.json` if the package referenced lives on a registry (will fallback to `package.json` inside the tarball if the package is not in a registry)
-  - mismatching `repository` information is considered [_"manifest confusion"_](https://blog.vlt.sh/blog/the-massive-hole-in-the-npm-ecosystem) & will return `false` for _"reproducibility"_
-- runs the preparing/packing in an isolated container
-- provides persistent caching of results
-- currently only supports `npm` as a `"strategy"` but will expand to support other package managers in the future
+- ✅ determines whether or not a package can be reproduced from it's referenced repository metadata (ie. `repository`, `repository.type`, `repository.url`, `repository.directory` & `gitHead`)
+- 🔍 validates `repository` information against `package.json` if the package referenced lives on a registry (will fallback to `package.json` inside the tarball if the package is not in a registry)
+  - 🔀 mismatching `repository` information is considered [_"manifest confusion"_](https://blog.vlt.sh/blog/the-massive-hole-in-the-npm-ecosystem) & will return `false` for _"reproducibility"_
+- 🗄️ provides persistent caching of results
+- 🔄 currently only supports `npm` as a `"strategy"` but will expand to support other package managers in the future
 
-### How It Works
+#### How It Works
 
-1. fetches the package & any corresponding metadata
-2. if available, does a clone/checkout of the corresponding source `repository`
-3. attempts to prepare & pack the source repository using one or more [strategies](#strategies)
-4. validates the integrity value of `#3` against the package fetched in `#1`
-5. returns results and caches them for future use
-
+1. ⬇️ fetches the package & any corresponding metadata
+2. 📂 if available, does a clone/checkout of the corresponding source `repository`
+3. 🔄 attempts to prepare & pack the source repository using one or more [strategies](#strategies)
+4. 🔍 validates the integrity value of `#3` against the package fetched in `#1`
+5. 📄 returns results and caches them for future use
 
 ### Usage
 
