@@ -6,14 +6,6 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { homedir } from 'node:os'
 
-// TODO:
-// make cache configurable
-// make cache persist across runs
-// make cache spec-based (not just name)
-// add support for alternate package managers
-// add support for alternate package manager versions
-// add support for alternate package manager config
-
 // Get OS-specific cache directory
 function getDefaultCacheDir() {
   switch (process.platform) {
