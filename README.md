@@ -137,12 +137,12 @@ A strategy is a set of operations to take to recreate a package. Strategies shou
 
 ### Insights
 
-#### Top 7,006 High Impact Packages
+#### Top 5,000 High Impact Packages
 
 > Note: "High Impact" packages are defined as having >=1M downloads per week and/or >=500 dependants. This list was originally generated [here](http://github.com/nodejs/package-maintenance/issues/569#issuecomment-1739532894).
 
-- **6.35%** (127 of 2,000) are **reproducible**
-- **4.92%** (345 of 7,006) have **provenance**
+- **5.78%** (289) are **reproducible**
+- **3.72%** (186) have **provenance**
 
 <details>
 <summary>List of reproducible packages</summary>
@@ -274,6 +274,118 @@ npm-pick-manifest
 pacote
 read
 require-in-the-middle
+npm-install-checks
+throttleit
+@npmcli/run-script
+touch
+read-package-json-fast
+@npmcli/promise-spawn
+@npmcli/node-gyp
+@npmcli/git
+prebuild-install
+store2
+@npmcli/installed-package-contents
+proc-log
+postgres-interval
+xregexp
+webpack-hot-middleware
+is-what
+copy-anything
+set-cookie-parser
+p-filter
+fast-redact
+known-css-properties
+remark-slug
+is-builtin-module
+remark-external-links
+is-text-path
+text-extensions
+memoizee
+timers-ext
+spawn-command
+find-versions
+debounce
+xmlhttprequest-ssl
+pino-abstract-transport
+run-applescript
+use-callback-ref
+use-sidecar
+estree-to-babel
+default-browser
+bundle-name
+pretty-ms
+postcss-normalize
+cli-color
+macos-release
+windows-release
+remark-footnotes
+import-in-the-middle
+read-cmd-shim
+cpy
+write-json-file
+cron-parser
+find-babel-config
+lru-memoizer
+unzipper
+winston-daily-rotate-file
+obliterator
+csv-parser
+mnemonist
+set-immediate-shim
+through2-filter
+init-package-json
+winston-logzio
+@npmcli/package-json
+promzard
+s3-streamlogger
+bin-links
+@npmcli/map-workspaces
+@npmcli/name-from-folder
+walk-up-path
+ast-module-types
+union
+why-is-node-running
+@npmcli/metavuln-calculator
+hot-shots
+parse-conflict-json
+oidc-token-hash
+prom-client
+marked-terminal
+promise-call-limit
+node-source-walk
+libmime
+logzio-nodejs
+postcss-sorting
+@zeit/schemas
+ethereum-cryptography
+parse-github-url
+light-my-request
+detective-stylus
+n
+comment-json
+detective-typescript
+@lezer/common
+@lezer/lr
+precinct
+redux-mock-store
+detective-postcss
+twilio
+log
+tocbot
+@hapi/podium
+detective-es6
+get-amd-module-type
+detective-sass
+detective-scss
+detective-cjs
+generate-object-property
+sprintf-kit
+highcharts
+graphql-subscriptions
+@tailwindcss/forms
+jspdf
+chance
+eslint-plugin-react-native
 </pre>
 </details>
 
