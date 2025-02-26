@@ -407,4 +407,4 @@ Big thanks to [@siddharthkp](https://github.com/siddharthkp) for gifting the pac
 
 We wrote a blog post about this project & the results we found which you can read here: https://blog.vlt.sh/blog/reproducibility
 
-<a href="https://blog-git-darcyclarke-reproduce-vlt.vercel.app/blog/reproducibility"><img src="https://github.com/user-attachments/assets/65cb6e3f-8673-49ba-9e5c-94e80925690f" alt="Is your package reproducible?" /></a>
+<a href="https://blog.vlt.sh/blog/reproducibility"><img src="https://github.com/user-attachments/assets/65cb6e3f-8673-49ba-9e5c-94e80925690f" alt="Is your package reproducible?" /></a>

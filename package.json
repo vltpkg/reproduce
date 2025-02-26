@@ -1,5 +1,6 @@
 {
   "name": "reproduce",
+  "description": "Validate a package's reproducibility against it's published repository information.",
   "version": "1.0.0",
   "license": "MIT",
   "author": "vlt technology inc. <ops@vlt.sh>",
@@ -15,5 +16,20 @@
   },
   "peerDependencies": {
     "npm": "^11.1.0"
-  }
+  },
+  "keywords": [
+    "reproducible",
+    "provenance",
+    "vlt",
+    "npm",
+    "package",
+    "info",
+    "spec",
+    "security",
+    "audit",
+    "dependency",
+    "dependencies",
+    "dependency-audit"
+  ]
+
 }
