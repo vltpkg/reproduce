@@ -44,10 +44,11 @@ export async function reproduce (spec, opts={}) {
 
   let skipSetup = false
 
-  if (!existsSync(opts.cacheDir)) {
-    mkdirSync(opts.cacheDir, { recursive: true })
-  }
   const cacheFilePath = join(opts.cacheDir, opts.cacheFile)
+  if (!existsSync(cacheFilePath)) {
+    mkdirSync(opts.cacheDir, { recursive: true })
+    writeFileSync(cacheFilePath, JSON.stringify(opts.cache))
+  }
   opts.cache = Object.keys(opts.cache).length > 0 ? opts.cache : JSON.parse(readFileSync(cacheFilePath, 'utf8'))
 
   try {
