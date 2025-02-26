@@ -139,7 +139,7 @@ A strategy is a set of operations to take to recreate a package. Strategies shou
 
 #### Top 5,000 High Impact Packages
 
-> Note: "High Impact" packages are defined as having >=1M downloads per week and/or >=500 dependants. This list was originally generated [here](http://github.com/nodejs/package-maintenance/issues/569#issuecomment-1739532894).
+> Note: "High Impact" packages are defined as having >=1M downloads per week and/or >=500 dependants. This list was originally generated [here](http://github.com/nodejs/package-maintenance/issues/569#issuecomment-1739532894). This test was run on 2025-02-26.
 
 - **5.78%** (289) are **reproducible**
 - **3.72%** (186) have **provenance**
