@@ -42,6 +42,8 @@ export async function reproduce (spec, opts={}) {
     ...opts
   }
 
+  let skipSetup = false
+
   if (!existsSync(opts.cacheDir)) {
     mkdirSync(opts.cacheDir, { recursive: true })
   }
@@ -86,22 +88,24 @@ export async function reproduce (spec, opts={}) {
     const cacheDir = join(opts.cacheDir, sourceSpec.name)
 
     try {
-      // Clone and install
-      execSync(`
-        rm -rf ${cacheDir} &&
-        git clone https://github.com/${location}.git ${cacheDir} --depth 1 >/dev/null &&
-        cd ${cacheDir} &&
-        git checkout ${ref} >/dev/null
-      `, EXEC_OPTIONS)
 
-      // Apply any package manager specific config
-      if (opts.packageManagerConfig) {
-        const configPath = join(cacheDir, `.${opts.packageManager}rc`)
-        writeFileSync(configPath, JSON.stringify(opts.packageManagerConfig, null, 2))
+      // Skip setup if the package is already cached or if the git repository is already cloned
+      if (opts.cache.hasOwnProperty(sourceSpec) || existsSync(cacheDir)) {
+        skipSetup = true
       }
 
-      // Install dependencies
-      execSync(strategy.install(cacheDir), EXEC_OPTIONS)
+      // Clone and install
+      if (!skipSetup) {
+        execSync(`
+          rm -rf ${cacheDir} &&
+          git clone https://github.com/${location}.git ${cacheDir} --depth 1 >/dev/null &&
+          cd ${cacheDir} &&
+          git checkout ${ref} >/dev/null
+        `, EXEC_OPTIONS)
+
+        // Install dependencies
+        execSync(strategy.install(cacheDir), EXEC_OPTIONS)
+      }
 
       // Pack and get integrity
       const packCommand = strategy.pack(cacheDir)
@@ -119,6 +123,7 @@ export async function reproduce (spec, opts={}) {
       arch: process.arch,
       strategy: `${opts.strategy}:${strategy.getVersion()}`,
       reproduced: packed?.integrity ? manifest.dist.integrity === packed.integrity : false,
+      attested: !!manifest.dist?.attestations?.url,
       package: {
         spec,
         location: manifest.dist.tarball,

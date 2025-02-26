@@ -137,24 +137,155 @@ A strategy is a set of operations to take to recreate a package. Strategies shou
 
 ### Insights
 
-#### 7,000+ High Impact Packages
+#### Top 7,006 High Impact Packages
 
 > Note: "High Impact" packages are defined as having >=1M downloads per week and/or >=500 dependants. This list was originally generated [here](http://github.com/nodejs/package-maintenance/issues/569#issuecomment-1739532894).
 
-- **xx%** (xxxx) **are** reproducible
-- **xx%** (xxxx) do not define a `gitHead`, git tag, git sha or any other explicit reference to the repository's state
-  - ie. they are pointing to the latest repository version, likely breaking reproducibility when changes are pushed
-- **xx%** (xxxx) have **manifest confusion** & their `repository` manifest information is mismatched with `package.json`
+- **6.35%** (127 of 2,000) are **reproducible**
+- **4.92%** (345 of 7,006) have **provenance**
+
+<details>
+<summary>List of reproducible packages</summary>
+<pre>
+semver
+tslib
+lru-cache
+readable-stream
+ansi-regex
+commander
+minimatch
+yallist
+glob
+string-width
+fs-extra
+emoji-regex
+which
+execa
+ws
+minipass
+cross-spawn
+micromatch
+whatwg-url
+tr46
+mime
+path-type
+loader-utils
+write-file-atomic
+callsites
+ini
+binary-extensions
+is-binary-path
+pump
+read-pkg
+normalize-package-data
+open
+json-parse-even-better-errors
+cli-cursor
+yocto-queue
+restore-cursor
+terser
+fastq
+sax
+ip
+log-symbols
+reusify
+ssri
+nopt
+normalize-url
+@eslint/eslintrc
+@humanwhocodes/config-array
+mdn-data
+mute-stream
+import-local
+gauge
+spdx-license-ids
+test-exclude
+regjsparser
+spdx-exceptions
+is-unicode-supported
+is-ci
+url
+source-map-js
+regenerate-unicode-properties
+minizlib
+unicode-match-property-value-ecmascript
+data-urls
+html-encoding-sniffer
+whatwg-mimetype
+cli-spinners
+xml-name-validator
+abbrev
+type
+unicode-canonical-property-names-ecmascript
+unique-slug
+unique-filename
+w3c-xmlserializer
+dot-prop
+camelcase-keys
+@sindresorhus/is
+foreground-child
+@npmcli/fs
+stream-shift
+log-update
+make-fetch-happen
+boxen
+del
+tar-fs
+@hapi/hoek
+p-retry
+has-ansi
+minipass-fetch
+cli-boxes
+agentkeepalive
+sort-keys
+safe-stable-stringify
+node-gyp-build
+npm-normalize-package-bin
+builtins
+aws-sdk
+elliptic
+npm-package-arg
+validate-npm-package-name
+es5-ext
+es6-symbol
+strnum
+path-scurry
+registry-auth-token
+crypto-browserify
+d
+html-tags
+moment-timezone
+npm-bundled
+ignore-walk
+npm-packlist
+devtools-protocol
+get-port
+package-json
+p-defer
+p-event
+latest-version
+default-browser-id
+npm-registry-fetch
+compress-commons
+zip-stream
+lcid
+filter-obj
+npm-pick-manifest
+pacote
+read
+require-in-the-middle
+</pre>
+</details>
 
 ### FAQs
 
 #### Why look into "reproducibility"?
 
-Generally, "reproducible builds" has been a hot topic in the supply chain security world but little has been done to actually achieve this by the major incumbents.
+We believe the strategy of leveraging reproducible builds for the purpose of associating artifacts with a source/repository outperforms the current provenance strategy with the added benefit of being backwards compatible.
 
-#### Why open source `reproduce`?
+#### Will reproducibility get better with time?
 
-We think it's important that the ecoasystem can help contribute to & improve the semantics of reproducible packages in the JavaScript ecosystem. As we add more strategies, we should see the percentatge of reproducible packages grow over time. Feel free to contribute!
+Yes. As we add more strategies, we should see the percentatge of reproducible packages grow over time both net-new & previously published packages will benefit from the additional strategies. Feel free to contribute!
 
 ### Credits
 
