@@ -8,9 +8,6 @@
   },
   "type": "module",
   "scripts": {},
-  "engines": {
-    "node": ">=22.14.0"
-  },
   "dependencies": {
     "@vltpkg/package-info": "^0.0.0-0.1730724342581",
     "@vltpkg/spec": "^0.0.0-0.1730724342581",
