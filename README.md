@@ -1,4 +1,4 @@
-![reproduce](https://github.com/user-attachments/assets/cf9f4d5d-b78e-4fda-94d3-34a9271f012e)
+<img src="https://github.com/user-attachments/assets/e31faec6-a3b7-48d1-92a3-f88f0a5521f8" alt="reproducible logo" />
 
 # `reproduce`
 
