@@ -4,7 +4,7 @@
   "license": "MIT",
   "author": "vlt technology inc. <ops@vlt.sh>",
   "bin": {
-    ".": "./cli.js"
+    "reproduce": "./cli.js"
   },
   "type": "module",
   "scripts": {},
