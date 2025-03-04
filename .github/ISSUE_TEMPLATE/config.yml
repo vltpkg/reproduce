@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Discussions
+    url: https://github.com/vltpkg/reproduce/discussions
+    about: Please ask and answer questions here.
+  - name: Documentation
+    url: https://github.com/vltpkg/reproduce#readme
+    about: Check the README for usage information.

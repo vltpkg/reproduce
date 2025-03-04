@@ -2,6 +2,9 @@
 
 # `reproduce`
 
+[![Test](https://github.com/darcyclarke/reproduce/actions/workflows/test.yml/badge.svg)](https://github.com/darcyclarke/reproduce/actions/workflows/test.yml)
+[![Lint and Type Check](https://github.com/darcyclarke/reproduce/actions/workflows/lint.yml/badge.svg)](https://github.com/darcyclarke/reproduce/actions/workflows/lint.yml)
+
 Can we reproduce a package with the _"origin"_ information provided?
 
 **[Features](#features)**
@@ -36,6 +39,15 @@ Can we reproduce a package with the _"origin"_ information provided?
 
 ### Usage
 
+```bash
+$ npm i -g reproduce # install globally
+$ reproduce axios
+```
+
+```bash
+$ npx reproduce axios # execute with npx
+```
+
 ```js
 import reproduce from 'reproduce'
 
@@ -54,15 +66,15 @@ const result = await reproduce('package-name', {
 #### CLI
 
 ```bash
-npx reproduce tsc # exit code 0 - reproducible
+reproduce tsc # exit code 0 - reproducible
 ```
 
 ```bash
-npx reproduce esbuild # exit code 1 - not reproducible
+reproduce esbuild # exit code 1 - not reproducible
 ```
 
 ```bash
-npx reproduce axios --json  # exit code 1 - not reproducible
+reproduce axios --json  # exit code 1 - not reproducible
 {
   "reproduceVersion": "0.0.1-pre.1",
   "timestamp": "2025-02-25T10:40:24.947Z",
@@ -71,20 +83,25 @@ npx reproduce axios --json  # exit code 1 - not reproducible
   "strategy": "npm:10.9.1",
   "reproduced": false,
   "package": {
-    "spec": "axios",
+    "spec": "axios@latest",
+    "name": "axios",
+    "version": "1.2.3",
     "location": "https://registry.npmjs.org/axios/-/axios-1.7.9.tgz",
     "integrity": "sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw=="
   },
   "source": {
     "spec": "github:axios/axios#b2cb45d5a533a5465c99559b16987e4d5fc08cbc",
+    "name": "axios",
+    "version": "1.2.3",
     "location": "git+https://github.com/axios/axios.git",
     "integrity": "null"
-  }
+  },
+  "diff": "..."
 }
 ```
 
 ```bash
-npx reproduce require --json  # exit code 0 - reproducible
+reproduce require --json  # exit code 0 - reproducible
 {
   "reproduceVersion": "0.0.1-pre.1",
   "timestamp": "2025-02-25T10:22:09.303Z",
@@ -93,12 +110,14 @@ npx reproduce require --json  # exit code 0 - reproducible
   "strategy": "npm:10.9.1",
   "reproduced": true,
   "package": {
-    "spec": "sleepover",
+    "spec": "sleepover@latest",
+    "version": "1.2.3",
     "location": "https://registry.npmjs.org/sleepover/-/sleepover-1.2.3.tgz",
     "integrity": "sha512-yNAIVUqbQifyy5+hfzAzK2Zt21wXjwXqPyWLu+tOvhOcYKG2ffUiSoBXwt/yo4KJ51IcJfUS0Uq0ktOoMWy9Yw=="
   },
   "source": {
     "spec": "github:darcyclarke/sleepover#f2586e91b3faf085583c23ed6e00819916e85c28",
+    "version": "1.2.3",
     "location": "git+ssh://git@github.com/darcyclarke/sleepover.git",
     "integrity": "sha512-yNAIVUqbQifyy5+hfzAzK2Zt21wXjwXqPyWLu+tOvhOcYKG2ffUiSoBXwt/yo4KJ51IcJfUS0Uq0ktOoMWy9Yw=="
   }
@@ -129,9 +148,9 @@ The cache is stored in OS-specific locations:
 
 A strategy is a set of operations to take to recreate a package. Strategies should represent common patterns for preparing/building/packing packages to cast wide nets. If a set successfully recreates a package then its ID will be stored inside the returned metadata.
 
-| UUID |  Notes |
+| Name | UUID |  Description |
 | --- | --- |
-| `npm:<version>` | clones, checks out ref, installs deps, runs prepare scripts & packs |
+| `npm` `npm:<version>` | clones, checks out ref, installs deps & then runs pack |
 
 > Note: one-off/bespoke or complex configurations will not be supported but we will continue to add more strategies as we find common patterns.
 
