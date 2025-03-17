@@ -7,9 +7,10 @@
   "bin": {
     "reproduce": "./dist/cli.js"
   },
-  "main": "./dist/cli.js",
+  "main": "./dist/index.js",
   "exports": {
-    ".": "./dist/cli.js"
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
   },
   "repository": {
     "type": "git",
