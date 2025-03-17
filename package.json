@@ -16,10 +16,10 @@
     "build": "tsc",
     "start": "node dist/cli.js",
     "dev": "tsc --watch",
-    "test": "node --no-warnings test/run.js",
+    "test": "npm run lint &&node --no-warnings test/run.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepublishOnly": "vlr build"
+    "preppack": "npm install && npm run build && npm run test"
   },
   "publishConfig": {
     "engines": {}
