@@ -2,8 +2,7 @@
 
 # `reproduce`
 
-[![Test](https://github.com/darcyclarke/reproduce/actions/workflows/test.yml/badge.svg)](https://github.com/darcyclarke/reproduce/actions/workflows/test.yml)
-[![Lint and Type Check](https://github.com/darcyclarke/reproduce/actions/workflows/lint.yml/badge.svg)](https://github.com/darcyclarke/reproduce/actions/workflows/lint.yml)
+[![Test](https://github.com/vltpkg/reproduce/actions/workflows/test.yml/badge.svg)](https://github.com/vltpkg/reproduce/actions/workflows/test.yml)
 
 Can we reproduce a package with the _"origin"_ information provided?
 
