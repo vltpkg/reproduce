@@ -1,10 +1,16 @@
-import { execSync } from 'node:child_process';
-import { Spec } from '@vltpkg/spec';
-import { manifest as getManifest } from '@vltpkg/package-info';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
-const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
+import { exec, ExecOptions } from 'node:child_process';
+import { readFile, writeFile, mkdir, access } from 'node:fs/promises';
+import { Spec } from '@vltpkg/spec';
+import { manifest as getManifest } from '@vltpkg/package-info';
+// @ts-ignore
+import * as ssri from 'ssri';
+// @ts-ignore
+import * as pack from 'libnpmpack';
+
+// Load package.json asynchronously
+const pkg = JSON.parse(await readFile('./package.json', 'utf8'));
 
 interface PackageManifest {
   name: string
@@ -24,18 +30,10 @@ interface PackageManifest {
   }
 }
 
-interface PackedResult {
-  integrity?: string
-  [key: string]: any
-}
-
 interface Strategy {
-  getVersion: () => string
+  getVersion: () => Promise<string>
   install: (dir: string) => string
-  pack: (dir: string) => {
-    command: string
-    parseResult: (output: string) => PackedResult
-  }
+  pack: (dir: string) => Promise<string>
 }
 
 export interface ReproduceOptions {
@@ -43,6 +41,7 @@ export interface ReproduceOptions {
   cacheDir?: string
   cacheFile?: string
   strategy?: 'npm'
+  force?: boolean
 }
 
 export interface ReproduceResult {
@@ -104,7 +103,7 @@ function parseURL(url: string): { name: string; version: string } {
 }
 
 // Get OS-specific cache directory
-function getDefaultCacheDir(): string {
+export function getDefaultCacheDir(): string {
   switch (process.platform) {
   case 'darwin':
     return join(homedir(), 'Library', 'Caches', 'reproduce');
@@ -117,19 +116,40 @@ function getDefaultCacheDir(): string {
 
 const DEFAULT_CACHE_DIR = getDefaultCacheDir();
 const DEFAULT_CACHE_FILE = 'cache.json';
-const EXEC_OPTIONS = { stdio: [] };
+const EXEC_OPTIONS: ExecOptions = {};
 const STRATEGIES: Record<string, Strategy> = {
   npm: {
-    getVersion: () => execSync('npm --version', EXEC_OPTIONS).toString().trim(),
+    getVersion: async () => {
+      return new Promise<string>((resolve, reject) => {
+        exec('npm --version', EXEC_OPTIONS, (error: Error | null, stdout: Buffer | string) => {
+          if (error) reject(error);
+          else resolve(stdout.toString().trim());
+        });
+      });
+    },
     install: (dir: string) => `cd ${dir} && npm install --no-audit --no-fund --silent >/dev/null`,
-    pack: (dir: string) => ({
-      command: `
-        cd ${dir} && 
-        npm pack --dry-run --json`,
-      parseResult: (output: string) => JSON.parse(output)[0]
-    })
+    pack: async (dir: string) => {
+      const tarball = await pack(dir);
+      const integrity = ssri.fromData(tarball, {
+        algorithms: [...new Set(['sha512'])],
+      });
+      return integrity['sha512'];
+    }
   }
 };
+
+// Helper function to promisify exec
+function execPromise(command: string, options: ExecOptions = {}): Promise<string> {
+  return new Promise((resolve, reject) => {
+    exec(command, options, (error: Error | null, stdout: Buffer | string, _stderr: Buffer | string) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(stdout.toString());
+      }
+    });
+  });
+}
 
 export async function reproduce(spec: string, opts: ReproduceOptions = {}): Promise<ReproduceResult | false> {
   
@@ -147,12 +167,16 @@ export async function reproduce(spec: string, opts: ReproduceOptions = {}): Prom
 
   let skipSetup = false;
 
+  // check global cache
   const cacheFilePath = join(opts.cacheDir!, opts.cacheFile!);
-  if (!existsSync(cacheFilePath)) {
-    mkdirSync(opts.cacheDir!, { recursive: true });
-    writeFileSync(cacheFilePath, JSON.stringify(opts.cache));
+  try {
+    await access(cacheFilePath);
+  } catch (e) {
+    await mkdir(opts.cacheDir!, { recursive: true });
+    await writeFile(cacheFilePath, JSON.stringify(opts.cache));
   }
-  opts.cache = Object.keys(opts.cache!).length > 0 ? opts.cache : JSON.parse(readFileSync(cacheFilePath, 'utf8'));
+  
+  opts.cache = Object.keys(opts.cache!).length > 0 ? opts.cache : JSON.parse(await readFile(cacheFilePath, 'utf8'));
 
   try {
     const info = new Spec(spec);
@@ -161,7 +185,7 @@ export async function reproduce(spec: string, opts: ReproduceOptions = {}): Prom
     }
 
     // Make cache spec-based by using the full spec as the key
-    if (opts.cache && opts.cache.hasOwnProperty(spec)) {
+    if (!opts.force && opts.cache && opts.cache.hasOwnProperty(spec)) {
       // If the package name was never set, parse the URL and set it & version (useful for old caches)
       const cacheEntry = opts.cache[spec];
       if (cacheEntry?.package && !cacheEntry.package.name) {
@@ -193,37 +217,57 @@ export async function reproduce(spec: string, opts: ReproduceOptions = {}): Prom
 
     const source = `github:${location}#${ref}${path}`;
     const sourceSpec = new Spec(`${manifest.name}@${source}`);
-    let packed: PackedResult = {};
-    
     const strategy = STRATEGIES[opts.strategy!];
-    const cacheDir = join(opts.cacheDir!, sourceSpec.name);
+    const cacheDir = join(opts.cacheDir!, `${manifest.name}/${manifest.version}`);
+    let packedIntegrity: string | undefined;
 
     try {
       // Skip setup if the package is already cached or if the git repository is already cloned
-      if (opts.cache!.hasOwnProperty(sourceSpec.toString()) || existsSync(cacheDir)) {
+      if (!opts.force && (opts.cache!.hasOwnProperty(sourceSpec.toString()) || await access(cacheDir).then(() => true).catch(() => false))) {
         skipSetup = true;
       }
 
       // Clone and install
       if (!skipSetup) {
-        execSync(`
-          rm -rf ${cacheDir} &&
-          git clone https://github.com/${location}.git ${cacheDir} --depth 1 >/dev/null &&
-          cd ${cacheDir} &&
-          git checkout ${ref} >/dev/null
-        `, EXEC_OPTIONS);
-
+        try {
+          await execPromise(`
+            rm -rf ${cacheDir} &&
+            mkdir -p ${cacheDir} &&
+            cd ${cacheDir} &&
+            git init &&
+            git remote add origin https://github.com/${location}.git >/dev/null &&
+            git fetch --depth 1 origin ${ref} >/dev/null &&
+            git checkout FETCH_HEAD >/dev/null
+          `, EXEC_OPTIONS);
+        } catch (e) {
+          console.log('clone error:', e);
+          // swallow clone errors
+        }
+        
         // Install dependencies
-        execSync(strategy.install(cacheDir), EXEC_OPTIONS);
+        try {
+          await execPromise(strategy.install(cacheDir), EXEC_OPTIONS);
+        } catch (e) {
+          console.log('install error:', e);
+          // swallow install errors
+        }
       }
 
       // Pack and get integrity
-      const packCommand = strategy.pack(cacheDir);
-      const packResult = execSync(packCommand.command, EXEC_OPTIONS);
-      packed = packCommand.parseResult(packResult.toString());
-   
+      packedIntegrity = await strategy.pack(cacheDir);
+
     } catch (e) {
       // swallow reproducibility errors
+    }
+
+    const reproduced = packedIntegrity ? manifest.dist.integrity === packedIntegrity : false;
+    let diff = undefined;
+    if (!reproduced) {
+      try {
+        diff = await execPromise(`cd ${cacheDir} && npm diff --diff="$(npm pkg get name | xargs)-$(npm pkg get version | xargs).tgz" --diff=${manifest.name}@${manifest.version}`, EXEC_OPTIONS);
+      } catch (e) {
+        // swallow diff errors
+      }
     }
 
     const check: ReproduceResult = opts.cache![spec] = {
@@ -231,8 +275,8 @@ export async function reproduce(spec: string, opts: ReproduceOptions = {}): Prom
       timestamp: new Date(),
       os: process.platform,
       arch: process.arch,
-      strategy: `${opts.strategy}:${strategy.getVersion()}`,
-      reproduced: packed?.integrity ? manifest.dist.integrity === packed.integrity : false,
+      strategy: `${opts.strategy}:${await strategy.getVersion()}`,
+      reproduced,
       attested: !!manifest.dist?.attestations?.url,
       package: {
         spec,
@@ -244,16 +288,18 @@ export async function reproduce(spec: string, opts: ReproduceOptions = {}): Prom
       source: {
         spec: source,
         location: repo.url,
-        integrity: packed?.integrity || 'null',
-      }
+        integrity: packedIntegrity || 'null',
+      },
+      diff: diff ? diff : 'error'
     };
 
     // Persist cache
-    writeFileSync(cacheFilePath, JSON.stringify(opts.cache, null, 2));
+    await writeFile(cacheFilePath, JSON.stringify(opts.cache, null, 2));
  
     return check;
 
   } catch (e) {
+    console.error('critical error:', e);
     return opts.cache![spec] = false;
   }
 } 

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+import pkg from './package.json' with { type: 'json' };
 import { reproduce, ReproduceResult } from './index.js';
+import ora from 'ora';
 // @ts-ignore
 import { minargs } from 'minargs';
 
@@ -11,18 +13,28 @@ const usage = `USAGE:
 OPTIONS:          DESCRIPTION:
 
 -s, --strategy    Choose a strategy (default: "npm")
+-f, --force       Ignore cached results
 -j, --json        Output result as JSON
--h, --help        Print usage information
 
+-v, --version     Print version information
+-h, --help        Print usage information
 `;
 const opts = {
   alias: {
     s: 'strategy',
     j: 'json',
-    h: 'help'
+    h: 'help',
+    v: 'version',
+    f: 'force'
   }
 };
 const { positionals, args } = minargs(opts);
+
+// Check if the version flag was passed
+if (args.version) {
+  console.log(pkg.version);
+  process.exit(0);
+}
 
 // Check if the help flag was passed
 if (args.help) {
@@ -38,10 +50,12 @@ if (positionals.length === 0) {
 
 // Run the reproduce function
 async function main() {
+  const spinner = ora({ text: 'Reproducing...', discardStdin: false }).start();
   const result = await reproduce(positionals[0], { 
-    strategy: args?.strategy?.[0] || 'npm' 
+    strategy: args?.strategy?.[0] || 'npm',
+    force: !!args.force
   });
-  
+  spinner.clear();
   if (result && args.json) {
     console.log(JSON.stringify(result, null, 2));
   }

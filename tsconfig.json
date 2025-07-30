@@ -9,8 +9,9 @@
     "strict": true,
     "declaration": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
   },
-  "include": ["*.ts"],
+  "include": ["*.ts", "types.d.ts"],
   "exclude": ["node_modules", "dist", "research"]
 }
