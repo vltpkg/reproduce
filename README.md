@@ -100,6 +100,19 @@ reproduce axios --json  # exit code 1 - not reproducible
 ```
 
 ```bash
+reproduce axios --force  # force revalidation, bypass cache
+```
+
+##### CLI Options
+
+| Option | Short | Description |
+|--------|-------|-------------|
+| `--strategy` | `-s` | Choose a strategy (default: "npm") |
+| `--json` | `-j` | Output result as JSON |
+| `--force` | `-f` | Force revalidation, bypass cache |
+| `--help` | `-h` | Print usage information |
+
+```bash
 reproduce require --json  # exit code 0 - reproducible
 {
   "reproduceVersion": "0.0.1-pre.1",

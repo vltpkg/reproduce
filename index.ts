@@ -47,6 +47,7 @@ export interface ReproduceOptions {
   cacheDir?: string
   cacheFile?: string
   strategy?: 'npm'
+  force?: boolean
 }
 
 export interface ReproduceResult {
@@ -165,7 +166,7 @@ export async function reproduce(spec: string, opts: ReproduceOptions = {}): Prom
     }
 
     // Make cache spec-based by using the full spec as the key
-    if (opts.cache && opts.cache.hasOwnProperty(spec)) {
+    if (!opts.force && opts.cache && opts.cache.hasOwnProperty(spec)) {
       // If the package name was never set, parse the URL and set it & version (useful for old caches)
       const cacheEntry = opts.cache[spec];
       if (cacheEntry?.package && !cacheEntry.package.name) {
@@ -204,7 +205,7 @@ export async function reproduce(spec: string, opts: ReproduceOptions = {}): Prom
 
     try {
       // Skip setup if the package is already cached or if the git repository is already cloned
-      if (opts.cache!.hasOwnProperty(sourceSpec.toString()) || existsSync(cacheDir)) {
+      if (!opts.force && (opts.cache!.hasOwnProperty(sourceSpec.toString()) || existsSync(cacheDir))) {
         skipSetup = true;
       }
 

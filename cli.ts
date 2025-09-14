@@ -12,6 +12,7 @@ OPTIONS:          DESCRIPTION:
 
 -s, --strategy    Choose a strategy (default: "npm")
 -j, --json        Output result as JSON
+-f, --force       Force revalidation, bypass cache
 -h, --help        Print usage information
 
 `;
@@ -19,6 +20,7 @@ const opts = {
   alias: {
     s: 'strategy',
     j: 'json',
+    f: 'force',
     h: 'help'
   }
 };
@@ -39,7 +41,8 @@ if (positionals.length === 0) {
 // Run the reproduce function
 async function main() {
   const result = await reproduce(positionals[0], { 
-    strategy: args?.strategy?.[0] || 'npm' 
+    strategy: args?.strategy?.[0] || 'npm',
+    force: !!args.force
   });
   
   if (result && args.json) {
