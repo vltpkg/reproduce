@@ -2,9 +2,13 @@ import { execSync } from 'node:child_process';
 import { Spec } from '@vltpkg/spec';
 import { manifest as getManifest } from '@vltpkg/package-info';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 import { homedir } from 'node:os';
-const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
 
 interface PackageManifest {
   name: string
