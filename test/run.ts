@@ -15,9 +15,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 console.log('🧪 Running reproduce tests...\n');
 
 // Helper function to run a test file
-async function runTest(testFile) {
+async function runTest(testFile: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    const testProcess = spawn('node', ['--test', '--no-warnings', testFile], {
+    const testProcess = spawn('npx', ['tsx', '--test', '--no-warnings', testFile], {
       stdio: 'inherit',
       cwd: process.cwd()
     });
@@ -33,14 +33,14 @@ async function runTest(testFile) {
 }
 
 // Run all tests
-async function runAllTests() {
+async function runAllTests(): Promise<void> {
   try {
     console.log('📋 Running tests...');
-    await runTest(join(__dirname, 'test.js'));
+    await runTest(join(__dirname, 'test.ts'));
     console.log('✅ All tests passed!\n');
     console.log('🎉 Test suite completed successfully!');
   } catch (error) {
-    console.error(error.message);
+    console.error((error as Error).message);
     process.exit(1);
   }
 }
