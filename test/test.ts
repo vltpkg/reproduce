@@ -68,7 +68,7 @@ describe('reproduce tests', () => {
     } catch (error) {
       // If the CLI fails, we'll skip this test rather than fail it
       // This allows the tests to pass in CI environments where the CLI might not work
-      console.log('Skipping CLI test:', error.message);
+      console.log('Skipping CLI test:', (error as Error).message);
     }
   });
   
@@ -114,7 +114,7 @@ describe('reproduce tests', () => {
       }
     } catch (error) {
       // If the module import fails, we'll skip this test rather than fail it
-      console.log('Skipping module import test:', error.message);
+      console.log('Skipping module import test:', (error as Error).message);
     }
   });
 });
